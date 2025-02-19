@@ -112,39 +112,8 @@ const fetchAndNotify = async () => {
         await processAlert(user, device, 'temperature', data.temperature, TEMPERATURE_MIN_THRESHOLD, TEMPERATURE_MAX_THRESHOLD, 'Température');
         await processAlert(user, device, 'humidity', data.humidity, HUMIDITY_MIN_THRESHOLD, HUMIDITY_MAX_THRESHOLD, 'Humidité air');
         await processAlert(user, device, 'moisture', data.moisture, MOISTURE_MIN_THRESHOLD, MOISTURE_MAX_THRESHOLD, 'Humidité du sol');
-        if (data.npk === 0) {
-            if (!device.alerts.npkLow) {
-              // Envoyer une notification "Pas de pluie"
-              await sendNotification(
-                user,
-                device,
-                `Alerte de Pluie ${device.name}`,
-                `Pas de pluie sur l'appareil ${device.name}.`
-              );
+        await processAlert(user, device, 'npk', data.npk, NPK_MIN_THRESHOLD, NPK_MAX_THRESHOLD, 'NPK');
         
-              // Mettre à jour les états dans la base de données
-              device.alerts.npkLow = true; // Indiquer que "Pas de pluie" est actif
-              device.alerts.npkHigh = false; // Désactiver "Pluie détectée"
-              await device.save();
-            }
-          }
-          // Vérifier si la valeur de NPK est 1 (pluie détectée)
-          else if (data.npk === 1) {
-            if (!device.alerts.npkHigh) {
-              // Envoyer une notification "Pluie détectée"
-              await sendNotification(
-                user,
-                device,
-                `Alerte de Pluie ${device.name}`,
-                `Il pleut sur l'appareil ${device.name}.`
-              );
-        
-              // Mettre à jour les états dans la base de données
-              device.alerts.npkHigh = true; // Indiquer que "Pluie détectée" est active
-              device.alerts.npkLow = false; // Désactiver "Pas de pluie"
-              await device.save();
-            }
-          }
       }
     }
   } catch (error) {
