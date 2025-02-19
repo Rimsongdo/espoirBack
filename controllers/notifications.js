@@ -112,7 +112,7 @@ const fetchAndNotify = async () => {
         await processAlert(user, device, 'temperature', data.temperature, TEMPERATURE_MIN_THRESHOLD, TEMPERATURE_MAX_THRESHOLD, 'Température');
         await processAlert(user, device, 'humidity', data.humidity, HUMIDITY_MIN_THRESHOLD, HUMIDITY_MAX_THRESHOLD, 'Humidité air');
         await processAlert(user, device, 'moisture', data.moisture, MOISTURE_MIN_THRESHOLD, MOISTURE_MAX_THRESHOLD, 'Humidité du sol');
-        if (npk === 0) {
+        if (data.npk === 0) {
             if (!device.alerts.npkLow) {
               // Envoyer une notification "Pas de pluie"
               await sendNotification(
@@ -129,7 +129,7 @@ const fetchAndNotify = async () => {
             }
           }
           // Vérifier si la valeur de NPK est 1 (pluie détectée)
-          else if (npk === 1) {
+          else if (data.npk === 1) {
             if (!device.alerts.npkHigh) {
               // Envoyer une notification "Pluie détectée"
               await sendNotification(
